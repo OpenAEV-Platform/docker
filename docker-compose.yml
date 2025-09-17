@@ -175,6 +175,43 @@ services:
       openbas:
         condition: service_healthy
     restart: always
+  collector-nvd-nist-cve:
+    image: openbas/collector-nvd-nist-cve:prerelease
+    environment:
+      - OPENBAS_URL=http://openbas:8080
+      - OPENBAS_TOKEN=${OPENBAS_ADMIN_TOKEN}
+      - COLLECTOR_ID=${COLLECTOR_NVD_NIST_CVE_ID} # Valid UUIDv4
+      - NVD_NIST_CVE_API_KEY=${COLLECTOR_NVD_NIST_CVE_API_KEY}
+      - "COLLECTOR_NAME=Cve by NVD NIST"
+      - COLLECTOR_LOG_LEVEL=info
+    depends_on:
+      openbas:
+        condition: service_healthy
+    restart: always
+  injector-nmap:
+    image: openbas/injector-nmap:1.18.18
+    environment:
+      - OPENBAS_URL=http://openbas:8080
+      - OPENBAS_TOKEN=${OPENBAS_ADMIN_TOKEN}
+      - INJECTOR_ID=${INJECTOR_NMAP_ID} # Valid UUIDv4
+      - "INJECTOR_NAME=Nmap"
+      - INJECTOR_LOG_LEVEL=info
+    depends_on:
+      openbas:
+        condition: service_healthy
+    restart: always
+  injector-nuclei:
+    image: openbas/injector-nuclei:1.18.18
+    environment:
+      - OPENBAS_URL=http://openbas:8080
+      - OPENBAS_TOKEN=${OPENBAS_ADMIN_TOKEN}
+      - INJECTOR_ID=${INJECTOR_NUCLEI_ID} # Valid UUIDv4
+      - "INJECTOR_NAME=Nuclei"
+      - INJECTOR_LOG_LEVEL=info
+    depends_on:
+      openbas:
+        condition: service_healthy
+    restart: always
 volumes:
   pgsqldata:
   s3data:
