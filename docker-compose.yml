@@ -189,7 +189,7 @@ services:
         condition: service_healthy
     restart: always
   injector-nmap:
-    image: openbas/injector-nmap:1.18.18
+    image: openbas/injector-nmap:1.18.19
     environment:
       - OPENBAS_URL=http://openbas:8080
       - OPENBAS_TOKEN=${OPENBAS_ADMIN_TOKEN}
