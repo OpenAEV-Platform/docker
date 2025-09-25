@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
   openbas-dev-minio:
     container_name: openbas-dev-minio
-    image: minio/minio:RELEASE.2024-05-28T17-19-04Z
+    image: minio/minio:RELEASE.2025-06-13T11-33-47Z
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -27,7 +27,7 @@ services:
     volumes:
       - type: bind
         source: rabbitmq.conf
-        target: /etc/rabbitmq/rabbitmq.conf    
+        target: /etc/rabbitmq/rabbitmq.conf
     restart: unless-stopped
     ports:
       - "5672:5672"
