@@ -201,7 +201,7 @@ services:
         condition: service_healthy
     restart: always
   injector-nuclei:
-    image: openbas/injector-nuclei:1.18.20
+    image: openbas/injector-nuclei:2.0.0
     environment:
       - OPENBAS_URL=http://openbas:8080
       - OPENBAS_TOKEN=${OPENBAS_ADMIN_TOKEN}
