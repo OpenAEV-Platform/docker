@@ -4,12 +4,12 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: openbas
+      POSTGRES_DB: openaev
     volumes:
       - pgsqldata:/var/lib/postgresql/data
     restart: always
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "openbas" ]
+      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "openaev" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -75,22 +75,22 @@ services:
       interval: 30s
       timeout: 10s
       retries: 50
-  openbas:
-    image: openbas/platform:2.0.0
-    # If you need (see the doc), uncomment to use a bind mount and set the attribute $OPENBAS_EXTRA_TRUSTED_CERTS_DIR (host folder) in your .env
+  openaev:
+    image: openaev/platform:2.0.0
+    # If you need (see the doc), uncomment to use a bind mount and set the attribute $OPENAEV_EXTRA_TRUSTED_CERTS_DIR (host folder) in your .env
     #volumes:
-    #  - $OPENBAS_EXTRA_TRUSTED_CERTS_DIR:/opt/openbas/additional_certs
+    #  - $OPENAEV_EXTRA_TRUSTED_CERTS_DIR:/opt/openaev/additional_certs
     environment:
-      # OpenBAS General Configuration
-      - OPENBAS_BASE-URL=${OPENBAS_BASE_URL}
-      - OPENBAS_AUTH-LOCAL-ENABLE=true
-      - OPENBAS_ADMIN_EMAIL=${OPENBAS_ADMIN_EMAIL}
-      - OPENBAS_ADMIN_PASSWORD=${OPENBAS_ADMIN_PASSWORD}
-      - OPENBAS_ADMIN_TOKEN=${OPENBAS_ADMIN_TOKEN}
-      - OPENBAS_HEALTHCHECK_KEY=${OPENBAS_HEALTHCHECK_KEY:-ChangeMe}
-      - OPENBAS_EXTRA-TRUSTED-CERTS-DIR=/opt/openbas/additional_certs
+      # OpenAEV General Configuration
+      - OPENAEV_BASE-URL=${OPENAEV_BASE_URL}
+      - OPENAEV_AUTH-LOCAL-ENABLE=true
+      - OPENAEV_ADMIN_EMAIL=${OPENAEV_ADMIN_EMAIL}
+      - OPENAEV_ADMIN_PASSWORD=${OPENAEV_ADMIN_PASSWORD}
+      - OPENAEV_ADMIN_TOKEN=${OPENAEV_ADMIN_TOKEN}
+      - OPENAEV_HEALTHCHECK_KEY=${OPENAEV_HEALTHCHECK_KEY:-ChangeMe}
+      - OPENAEV_EXTRA-TRUSTED-CERTS-DIR=/opt/openaev/additional_certs
       # POSTGRES
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://pgsql:5432/openbas
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://pgsql:5432/openaev
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
       # MINIO
@@ -98,9 +98,9 @@ services:
       - MINIO_ACCESS-KEY=${MINIO_ROOT_USER}
       - MINIO_ACCESS-SECRET=${MINIO_ROOT_PASSWORD}
       # RABBITMQ
-      - OPENBAS_RABBITMQ_HOSTNAME=rabbitmq
-      - OPENBAS_RABBITMQ_USER=${RABBITMQ_DEFAULT_USER}
-      - OPENBAS_RABBITMQ_PASS=${RABBITMQ_DEFAULT_PASS}
+      - OPENAEV_RABBITMQ_HOSTNAME=rabbitmq
+      - OPENAEV_RABBITMQ_USER=${RABBITMQ_DEFAULT_USER}
+      - OPENAEV_RABBITMQ_PASS=${RABBITMQ_DEFAULT_PASS}
       # ELASTICSEARCH
       - ENGINE_URL=http://elasticsearch:9200
       # SPRING MAIL Configurations
@@ -113,17 +113,17 @@ services:
       - SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_TRUST=*
       - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=${SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE}
       # IMAP Configurations
-      - OPENBAS_MAIL_IMAP_ENABLED=${OPENBAS_MAIL_IMAP_ENABLED}
-      - OPENBAS_MAIL_IMAP_HOST=${OPENBAS_MAIL_IMAP_HOST}
-      - OPENBAS_MAIL_IMAP_PORT=${OPENBAS_MAIL_IMAP_PORT}
-      - OPENBAS_MAIL_IMAP_USERNAME=${SPRING_MAIL_USERNAME}
-      - OPENBAS_MAIL_IMAP_PASSWORD=${SPRING_MAIL_PASSWORD}
-      - OPENBAS_MAIL_IMAP_AUTH=${OPENBAS_MAIL_IMAP_AUTH}
-      - OPENBAS_MAIL_IMAP_SSL_ENABLE=${OPENBAS_MAIL_IMAP_SSL_ENABLE}
-      - OPENBAS_MAIL_IMAP_SSL_TRUST=*
-      - OPENBAS_MAIL_IMAP_STARTTLS_ENABLE=${OPENBAS_MAIL_IMAP_STARTTLS_ENABLE}
+      - OPENAEV_MAIL_IMAP_ENABLED=${OPENAEV_MAIL_IMAP_ENABLED}
+      - OPENAEV_MAIL_IMAP_HOST=${OPENAEV_MAIL_IMAP_HOST}
+      - OPENAEV_MAIL_IMAP_PORT=${OPENAEV_MAIL_IMAP_PORT}
+      - OPENAEV_MAIL_IMAP_USERNAME=${SPRING_MAIL_USERNAME}
+      - OPENAEV_MAIL_IMAP_PASSWORD=${SPRING_MAIL_PASSWORD}
+      - OPENAEV_MAIL_IMAP_AUTH=${OPENAEV_MAIL_IMAP_AUTH}
+      - OPENAEV_MAIL_IMAP_SSL_ENABLE=${OPENAEV_MAIL_IMAP_SSL_ENABLE}
+      - OPENAEV_MAIL_IMAP_SSL_TRUST=*
+      - OPENAEV_MAIL_IMAP_STARTTLS_ENABLE=${OPENAEV_MAIL_IMAP_STARTTLS_ENABLE}
     ports:
-      - "8080:8080" # If you change the host port (the left one) do not forget to update OPENBAS_BASE-URL in you .env
+      - "8080:8080" # If you change the host port (the left one) do not forget to update OPENAEV_BASE-URL in you .env
     depends_on:
       pgsql:
         condition: service_healthy
@@ -135,81 +135,81 @@ services:
         condition: service_healthy
     restart: always
     healthcheck:
-      test: [ "CMD", "wget", "-qO-", "http://openbas:8080/api/health?health_access_key=${OPENBAS_HEALTHCHECK_KEY}" ]
+      test: [ "CMD", "wget", "-qO-", "http://openaev:8080/api/health?health_access_key=${OPENAEV_HEALTHCHECK_KEY}" ]
       interval: 10s
       timeout: 5s
       retries: 20
   collector-mitre-attack:
-    image: openbas/collector-mitre-attack:2.0.0
+    image: openaev/collector-mitre-attack:2.0.0
     environment:
-      - OPENBAS_URL=http://openbas:8080
-      - OPENBAS_TOKEN=${OPENBAS_ADMIN_TOKEN}
+      - OPENAEV_URL=http://openaev:8080
+      - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
       - COLLECTOR_ID=${COLLECTOR_MITRE_ATTACK_ID} # Valid UUIDv4
       - "COLLECTOR_NAME=MITRE ATT&CK"
       - COLLECTOR_LOG_LEVEL=info
     depends_on:
-      openbas:
+      openaev:
         condition: service_healthy
     restart: always
-  collector-openbas:
-    image: openbas/collector-openbas:2.0.0
+  collector-openaev:
+    image: openaev/collector-openaev:2.0.0
     environment:
-      - OPENBAS_URL=http://openbas:8080
-      - OPENBAS_TOKEN=${OPENBAS_ADMIN_TOKEN}
-      - COLLECTOR_ID=${COLLECTOR_OPENBAS_ID} # Valid UUIDv4
-      - "COLLECTOR_NAME=OpenBAS Datasets"
+      - OPENAEV_URL=http://openaev:8080
+      - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
+      - COLLECTOR_ID=${COLLECTOR_OPENAEV_ID} # Valid UUIDv4
+      - "COLLECTOR_NAME=OpenAEV Datasets"
       - COLLECTOR_LOG_LEVEL=info
     depends_on:
-      openbas:
+      openaev:
         condition: service_healthy
     restart: always
   collector-atomic-red-team:
-    image: openbas/collector-atomic-red-team:2.0.0
+    image: openaev/collector-atomic-red-team:2.0.0
     environment:
-      - OPENBAS_URL=http://openbas:8080
-      - OPENBAS_TOKEN=${OPENBAS_ADMIN_TOKEN}
+      - OPENAEV_URL=http://openaev:8080
+      - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
       - COLLECTOR_ID=${COLLECTOR_ATOMIC_RED_TEAM_ID} # Valid UUIDv4
       - "COLLECTOR_NAME=Atomic Red Team"
       - COLLECTOR_LOG_LEVEL=info
     depends_on:
-      openbas:
+      openaev:
         condition: service_healthy
     restart: always
   collector-nvd-nist-cve:
-    image: openbas/collector-nvd-nist-cve:prerelease
+    image: openaev/collector-nvd-nist-cve:2.0.0
     environment:
-      - OPENBAS_URL=http://openbas:8080
-      - OPENBAS_TOKEN=${OPENBAS_ADMIN_TOKEN}
+      - OPENAEV_URL=http://openaev:8080
+      - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
       - COLLECTOR_ID=${COLLECTOR_NVD_NIST_CVE_ID} # Valid UUIDv4
       - NVD_NIST_CVE_API_KEY=${COLLECTOR_NVD_NIST_CVE_API_KEY}
       - "COLLECTOR_NAME=CVE by NVD NIST"
       - COLLECTOR_LOG_LEVEL=info
     depends_on:
-      openbas:
+      openaev:
         condition: service_healthy
     restart: always
   injector-nmap:
-    image: openbas/injector-nmap:2.0.0
+    image: openaev/injector-nmap:2.0.0
     environment:
-      - OPENBAS_URL=http://openbas:8080
-      - OPENBAS_TOKEN=${OPENBAS_ADMIN_TOKEN}
+      - OPENAEV_URL=http://openaev:8080
+      - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
       - INJECTOR_ID=${INJECTOR_NMAP_ID} # Valid UUIDv4
       - "INJECTOR_NAME=Nmap"
       - INJECTOR_LOG_LEVEL=info
     depends_on:
-      openbas:
+      openaev:
         condition: service_healthy
     restart: always
   injector-nuclei:
-    image: openbas/injector-nuclei:2.0.0
+    image: openaev/injector-nuclei:2.0.0
     environment:
-      - OPENBAS_URL=http://openbas:8080
-      - OPENBAS_TOKEN=${OPENBAS_ADMIN_TOKEN}
+      - OPENAEV_URL=http://openaev:8080
+      - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
       - INJECTOR_ID=${INJECTOR_NUCLEI_ID} # Valid UUIDv4
       - "INJECTOR_NAME=Nuclei"
       - INJECTOR_LOG_LEVEL=info
     depends_on:
-      openbas:
+      openaev:
         condition: service_healthy
     restart: always
 volumes:
