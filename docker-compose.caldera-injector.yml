@@ -1,5 +1,5 @@
 services:
-  openbas:
+  openaev:
     environment:
       - INJECTOR_CALDERA_ENABLE=true
       - INJECTOR_CALDERA_URL=${CALDERA_URL:-http://caldera:8888}
