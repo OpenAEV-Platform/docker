@@ -140,7 +140,7 @@ services:
       timeout: 5s
       retries: 20
   collector-mitre-attack:
-    image: openaev/collector-mitre-attack:2.0.1
+    image: openaev/collector-mitre-attack:2.0.2
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
