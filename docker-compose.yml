@@ -76,7 +76,7 @@ services:
       timeout: 10s
       retries: 50
   openaev:
-    image: openaev/platform:2.0.5
+    image: openaev/platform:2.0.6
     # If you need (see the doc), uncomment to use a bind mount and set the attribute $OPENAEV_EXTRA_TRUSTED_CERTS_DIR (host folder) in your .env
     #volumes:
     #  - $OPENAEV_EXTRA_TRUSTED_CERTS_DIR:/opt/openaev/additional_certs
@@ -140,7 +140,7 @@ services:
       timeout: 5s
       retries: 20
   collector-mitre-attack:
-    image: openaev/collector-mitre-attack:2.0.5
+    image: openaev/collector-mitre-attack:2.0.6
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -152,7 +152,7 @@ services:
         condition: service_healthy
     restart: always
   collector-openaev:
-    image: openaev/collector-openaev:2.0.5
+    image: openaev/collector-openaev:2.0.6
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -164,7 +164,7 @@ services:
         condition: service_healthy
     restart: always
   collector-atomic-red-team:
-    image: openaev/collector-atomic-red-team:2.0.5
+    image: openaev/collector-atomic-red-team:2.0.6
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -176,7 +176,7 @@ services:
         condition: service_healthy
     restart: always
   collector-nvd-nist-cve:
-    image: openaev/collector-nvd-nist-cve:2.0.5
+    image: openaev/collector-nvd-nist-cve:2.0.6
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -189,7 +189,7 @@ services:
         condition: service_healthy
     restart: always
   injector-nmap:
-    image: openaev/injector-nmap:2.0.5
+    image: openaev/injector-nmap:2.0.6
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -201,7 +201,7 @@ services:
         condition: service_healthy
     restart: always
   injector-nuclei:
-    image: openaev/injector-nuclei:2.0.5
+    image: openaev/injector-nuclei:2.0.6
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
