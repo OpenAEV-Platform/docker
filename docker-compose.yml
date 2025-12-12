@@ -4,6 +4,19 @@ services:
   # DEPENDENCIES            #
   ###########################
 
+  # Generate RSA key for xtm-composer (PKCS#8 format)
+  rsa-key-generator:
+    image: alpine/openssl:3.5.4
+    volumes:
+      - rsakeys:/keys
+    entrypoint: ["/bin/ash"]
+    command: ["-c", "if [ ! -f /keys/private_key.pem ]; then openssl genpkey -algorithm RSA -out /keys/private_key.pem -pkeyopt rsa_keygen_bits:4096; fi && tail -f /dev/null"]
+    healthcheck:
+      test: ["CMD", "test", "-f", "/keys/private_key.pem"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: always
   pgsql:
     image: postgres:17-alpine
     environment:
@@ -255,3 +268,4 @@ volumes:
   s3data:
   amqpdata:
   esdata:
+  rsakeys:
