@@ -1,4 +1,9 @@
 services:
+
+  ###########################
+  # DEPENDENCIES            #
+  ###########################
+
   pgsql:
     image: postgres:17-alpine
     environment:
@@ -75,6 +80,39 @@ services:
       interval: 30s
       timeout: 10s
       retries: 50
+
+  ###########################
+  # COMMON                  #
+  ###########################
+
+  xtm-composer:
+    image: filigran/xtm-composer:1.0.1
+    platform: linux/amd64
+    environment:
+      - MANAGER__ID=${XTM_COMPOSER_ID}
+      - "MANAGER__NAME=XTM Integrations Manager"
+      - MANAGER__CREDENTIALS_KEY_FILEPATH=/keys/private_key.pem
+      - OPENAEV__ENABLE=true
+      - OPENAEV__URL=http://openaev:8080
+      - OPENAEV__TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - OPENAEV__DAEMON__SELECTOR=docker
+      - OPENAEV__DAEMON__DOCKER__NETWORK_MODE=${COMPOSE_PROJECT_NAME}_default
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - rsakeys:/keys:ro  # RSA key mounted as read-only
+    depends_on:
+      rsa-key-generator:
+        condition: service_healthy
+      opencti:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: always
+
+  ###########################
+  # OPENAEV                 #
+  ###########################
+
   openaev:
     image: openaev/platform:2.0.6
     # If you need (see the doc), uncomment to use a bind mount and set the attribute $OPENAEV_EXTRA_TRUSTED_CERTS_DIR (host folder) in your .env
@@ -139,6 +177,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 20
+
+  ###########################
+  # OPENAEV COLLECTORS      #
+  ###########################
+
   collector-mitre-attack:
     image: openaev/collector-mitre-attack:2.0.6
     environment:
@@ -188,6 +231,11 @@ services:
       openaev:
         condition: service_healthy
     restart: always
+
+  ###########################
+  # OPENAEV INJECTORS       #
+  ###########################
+
   injector-nmap:
     image: openaev/injector-nmap:2.0.6
     environment:
