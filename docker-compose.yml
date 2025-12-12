@@ -82,7 +82,7 @@ services:
     #  - $OPENAEV_EXTRA_TRUSTED_CERTS_DIR:/opt/openaev/additional_certs
     environment:
       # OpenAEV General Configuration
-      - OPENAEV_BASE-URL=${OPENAEV_BASE_URL}
+      - OPENAEV_BASE-URL=${OPENAEV_EXTERNAL_SCHEME}://${OPENAEV_HOST}:${OPENAEV_PORT}
       - OPENAEV_AUTH-LOCAL-ENABLE=true
       - OPENAEV_ADMIN_EMAIL=${OPENAEV_ADMIN_EMAIL}
       - OPENAEV_ADMIN_PASSWORD=${OPENAEV_ADMIN_PASSWORD}
@@ -123,7 +123,7 @@ services:
       - OPENAEV_MAIL_IMAP_SSL_TRUST=*
       - OPENAEV_MAIL_IMAP_STARTTLS_ENABLE=${OPENAEV_MAIL_IMAP_STARTTLS_ENABLE}
     ports:
-      - "8080:8080" # If you change the host port (the left one) do not forget to update OPENAEV_BASE-URL in you .env
+      - "${OPENAEV_PORT}:8080"
     depends_on:
       pgsql:
         condition: service_healthy
