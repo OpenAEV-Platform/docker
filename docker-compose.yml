@@ -115,11 +115,7 @@ services:
 
   openaev:
     image: openaev/platform:2.0.6
-    # If you need (see the doc), uncomment to use a bind mount and set the attribute $OPENAEV_EXTRA_TRUSTED_CERTS_DIR (host folder) in your .env
-    #volumes:
-    #  - $OPENAEV_EXTRA_TRUSTED_CERTS_DIR:/opt/openaev/additional_certs
     environment:
-      # OpenAEV General Configuration
       - OPENAEV_BASE-URL=${OPENAEV_EXTERNAL_SCHEME}://${OPENAEV_HOST}:${OPENAEV_PORT}
       - OPENAEV_AUTH-LOCAL-ENABLE=true
       - OPENAEV_ADMIN_EMAIL=${OPENAEV_ADMIN_EMAIL}
@@ -127,21 +123,16 @@ services:
       - OPENAEV_ADMIN_TOKEN=${OPENAEV_ADMIN_TOKEN}
       - OPENAEV_HEALTHCHECK_KEY=${OPENAEV_HEALTHCHECK_KEY:-ChangeMe}
       - OPENAEV_EXTRA-TRUSTED-CERTS-DIR=/opt/openaev/additional_certs
-      # POSTGRES
       - SPRING_DATASOURCE_URL=jdbc:postgresql://pgsql:5432/openaev
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
-      # MINIO
       - MINIO_ENDPOINT=minio
       - MINIO_ACCESS-KEY=${MINIO_ROOT_USER}
       - MINIO_ACCESS-SECRET=${MINIO_ROOT_PASSWORD}
-      # RABBITMQ
       - OPENAEV_RABBITMQ_HOSTNAME=rabbitmq
       - OPENAEV_RABBITMQ_USER=${RABBITMQ_DEFAULT_USER}
       - OPENAEV_RABBITMQ_PASS=${RABBITMQ_DEFAULT_PASS}
-      # ELASTICSEARCH
       - ENGINE_URL=http://elasticsearch:9200
-      # SPRING MAIL Configurations
       - SPRING_MAIL_HOST=${SMTP_HOST}
       - SPRING_MAIL_PORT=${SMTP_PORT}
       - SPRING_MAIL_USERNAME=${SMTP_USERNAME}
@@ -150,7 +141,6 @@ services:
       - SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_ENABLE=${SMTP_SSL_ENABLE}
       - SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_TRUST=*
       - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=${SMTP_STARTTLS_ENABLE}
-      # IMAP Configurations
       - OPENAEV_MAIL_IMAP_ENABLED=${OPENAEV_MAIL_IMAP_ENABLED}
       - OPENAEV_MAIL_IMAP_HOST=${IMAP_HOST}
       - OPENAEV_MAIL_IMAP_PORT=${IMAP_PORT}
@@ -242,7 +232,7 @@ services:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
       - INJECTOR_ID=${INJECTOR_NMAP_ID} # Valid UUIDv4
-      - "INJECTOR_NAME=Nmap"
+      - INJECTOR_NAME=Nmap
       - INJECTOR_LOG_LEVEL=info
     depends_on:
       openaev:
@@ -254,7 +244,7 @@ services:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
       - INJECTOR_ID=${INJECTOR_NUCLEI_ID} # Valid UUIDv4
-      - "INJECTOR_NAME=Nuclei"
+      - INJECTOR_NAME=Nuclei
       - INJECTOR_LOG_LEVEL=info
     depends_on:
       openaev:
