@@ -116,7 +116,7 @@ services:
     depends_on:
       rsa-key-generator:
         condition: service_healthy
-      opencti:
+      openaev:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
