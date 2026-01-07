@@ -107,7 +107,7 @@ services:
       - MANAGER__CREDENTIALS_KEY_FILEPATH=/keys/private_key.pem
       - OPENAEV__ENABLE=true
       - OPENAEV__URL=http://openaev:8080
-      - OPENAEV__TOKEN=${OPENAEV_ADMIN_EMAIL}
+      - OPENAEV__TOKEN=${OPENAEV_ADMIN_TOKEN}
       - OPENAEV__DAEMON__SELECTOR=docker
       - OPENAEV__DAEMON__DOCKER__NETWORK_MODE=${COMPOSE_PROJECT_NAME}_default
     volumes:
@@ -116,7 +116,7 @@ services:
     depends_on:
       rsa-key-generator:
         condition: service_healthy
-      opencti:
+      openaev:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
