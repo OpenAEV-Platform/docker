@@ -127,7 +127,7 @@ services:
   ###########################
 
   openaev:
-    image: openaev/platform:2.1.0
+    image: openaev/platform:2.1.1
     environment:
       - OPENAEV_BASE-URL=${OPENAEV_EXTERNAL_SCHEME}://${OPENAEV_HOST}:${OPENAEV_PORT}
       - OPENAEV_AUTH-LOCAL-ENABLE=true
@@ -188,7 +188,7 @@ services:
   ###########################
 
   collector-mitre-attack:
-    image: openaev/collector-mitre-attack:2.1.0
+    image: openaev/collector-mitre-attack:2.1.1
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -200,7 +200,7 @@ services:
         condition: service_healthy
     restart: always
   collector-openaev:
-    image: openaev/collector-openaev:2.1.0
+    image: openaev/collector-openaev:2.1.1
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -212,7 +212,7 @@ services:
         condition: service_healthy
     restart: always
   collector-atomic-red-team:
-    image: openaev/collector-atomic-red-team:2.1.0
+    image: openaev/collector-atomic-red-team:2.1.1
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -224,7 +224,7 @@ services:
         condition: service_healthy
     restart: always
   collector-nvd-nist-cve:
-    image: openaev/collector-nvd-nist-cve:2.1.0
+    image: openaev/collector-nvd-nist-cve:2.1.1
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -242,7 +242,7 @@ services:
   ###########################
 
   injector-nmap:
-    image: openaev/injector-nmap:2.1.0
+    image: openaev/injector-nmap:2.1.1
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -254,7 +254,7 @@ services:
         condition: service_healthy
     restart: always
   injector-nuclei:
-    image: openaev/injector-nuclei:2.1.0
+    image: openaev/injector-nuclei:2.1.1
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
