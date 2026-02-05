@@ -254,7 +254,7 @@ services:
         condition: service_healthy
     restart: always
   injector-nuclei:
-    image: openaev/injector-nuclei:2.1.4
+    image: openaev/injector-nuclei:2.1.5
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
