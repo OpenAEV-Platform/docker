@@ -242,7 +242,7 @@ services:
   ###########################
 
   injector-nmap:
-    image: openaev/injector-nmap:2.1.4
+    image: openaev/injector-nmap:2.1.5
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
