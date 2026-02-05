@@ -200,7 +200,7 @@ services:
         condition: service_healthy
     restart: always
   collector-openaev:
-    image: openaev/collector-openaev:2.1.4
+    image: openaev/collector-openaev:2.1.5
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
