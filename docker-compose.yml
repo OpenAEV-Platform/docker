@@ -212,7 +212,7 @@ services:
         condition: service_healthy
     restart: always
   collector-atomic-red-team:
-    image: openaev/collector-atomic-red-team:2.1.4
+    image: openaev/collector-atomic-red-team:2.1.5
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
