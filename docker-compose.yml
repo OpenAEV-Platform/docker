@@ -99,7 +99,7 @@ services:
   ###########################
 
   xtm-composer:
-    image: filigran/xtm-composer:1.0.2
+    image: filigran/xtm-composer:2.260223.0
     platform: linux/amd64
     environment:
       - MANAGER__ID=${XTM_COMPOSER_ID}
