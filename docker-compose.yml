@@ -6,7 +6,7 @@ services:
 
   # Generate RSA key for xtm-composer (PKCS#8 format)
   rsa-key-generator:
-    image: alpine/openssl:3.5.5
+    image: alpine/openssl:latest
     volumes:
       - rsakeys:/keys
     entrypoint: ["/bin/ash"]
@@ -32,7 +32,7 @@ services:
       timeout: 5s
       retries: 5
   minio:
-    image: minio/minio:RELEASE.2025-06-13T11-33-47Z
+    image: minio/minio:latest
     volumes:
       - s3data:/data
     ports:
@@ -99,7 +99,7 @@ services:
   ###########################
 
   xtm-composer:
-    image: filigran/xtm-composer:2.260223.0
+    image: filigran/xtm-composer:latest
     platform: linux/amd64
     environment:
       - MANAGER__ID=${XTM_COMPOSER_ID}
@@ -127,7 +127,7 @@ services:
   ###########################
 
   openaev:
-    image: openaev/platform:2.2.0
+    image: openaev/platform:latest
     environment:
       - OPENAEV_BASE-URL=${OPENAEV_EXTERNAL_SCHEME}://${OPENAEV_HOST}:${OPENAEV_PORT}
       - OPENAEV_AUTH-LOCAL-ENABLE=true
@@ -188,7 +188,7 @@ services:
   ###########################
 
   collector-mitre-attack:
-    image: openaev/collector-mitre-attack:2.2.0
+    image: openaev/collector-mitre-attack:latest
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -200,7 +200,7 @@ services:
         condition: service_healthy
     restart: always
   collector-openaev:
-    image: openaev/collector-openaev:2.2.0
+    image: openaev/collector-openaev:latest
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -212,7 +212,7 @@ services:
         condition: service_healthy
     restart: always
   collector-atomic-red-team:
-    image: openaev/collector-atomic-red-team:2.2.0
+    image: openaev/collector-atomic-red-team:latest
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -224,7 +224,7 @@ services:
         condition: service_healthy
     restart: always
   collector-nvd-nist-cve:
-    image: openaev/collector-nvd-nist-cve:2.2.0
+    image: openaev/collector-nvd-nist-cve:latest
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -242,7 +242,7 @@ services:
   ###########################
 
   injector-nmap:
-    image: openaev/injector-nmap:2.2.0
+    image: openaev/injector-nmap:latest
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
@@ -254,7 +254,7 @@ services:
         condition: service_healthy
     restart: always
   injector-nuclei:
-    image: openaev/injector-nuclei:2.2.0
+    image: openaev/injector-nuclei:latest
     environment:
       - OPENAEV_URL=http://openaev:8080
       - OPENAEV_TOKEN=${OPENAEV_ADMIN_TOKEN}
