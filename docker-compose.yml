@@ -24,7 +24,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: openaev
     volumes:
-      - pgsqldata:/var/lib/postgresql/data
+      - pgsqldata:/var/lib/postgresql/18/docker
     restart: always
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "openaev" ]
