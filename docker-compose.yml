@@ -177,6 +177,7 @@ services:
       - OPENAEV_RABBITMQ_USER=${RABBITMQ_DEFAULT_USER}
       - OPENAEV_RABBITMQ_PASS=${RABBITMQ_DEFAULT_PASS}
       - ENGINE_URL=http://elasticsearch:9200
+      - SPRING_ELASTICSEARCH_URIS=http://elasticsearch:9200
       - SPRING_MAIL_HOST=${SMTP_HOST}
       - SPRING_MAIL_PORT=${SMTP_PORT}
       - SPRING_MAIL_USERNAME=${SMTP_USERNAME}
@@ -195,6 +196,7 @@ services:
       - OPENAEV_MAIL_IMAP_SSL_TRUST=*
       - OPENAEV_MAIL_IMAP_STARTTLS_ENABLE=${IMAP_STARTTLS_ENABLE}
       - OPENAEV_WITH-PROXY=${OPENAEV_WITH_PROXY}
+      - MANAGEMENT_HEALTH_MAIL_ENABLED=false
       # XTM One
       - OPENAEV_XTM_ONE_URL=http://xtm-one:4000
       - OPENAEV_XTM_ONE_TOKEN=${PLATFORM_REGISTRATION_TOKEN}
@@ -211,10 +213,11 @@ services:
         condition: service_healthy
     restart: always
     healthcheck:
-      test: [ "CMD", "wget", "-qO-", "http://openaev:8080/api/health?health_access_key=${OPENAEV_HEALTHCHECK_KEY}" ]
+      test: [ "CMD", "wget", "-qO-", "http://openaev:8080/actuator/health/ping" ]
       interval: 10s
       timeout: 5s
-      retries: 20
+      retries: 30
+      start_period: 120s
 
   ###########################
   # OPENAEV COLLECTORS      #
