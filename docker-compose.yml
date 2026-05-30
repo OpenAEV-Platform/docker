@@ -286,8 +286,7 @@ services:
   ###########################
 
   pgsql-xtm-one:
-    # Dedicated pgvector-enabled instance for XTM One (kept separate from
-    # the OpenAEV pg cluster to isolate data and migrations).
+    # Dedicated pgvector-enabled instance for XTM One.
     image: pgvector/pgvector:pg17
     environment:
       POSTGRES_USER: ${XTM_ONE_POSTGRES_USER}
