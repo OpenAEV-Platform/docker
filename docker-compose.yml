@@ -17,6 +17,17 @@ services:
       timeout: 5s
       retries: 3
     restart: always
+  redis:
+    # Used by XTM One.
+    image: redis:8.6.3
+    restart: always
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
   pgsql:
     image: postgres:17-alpine
     environment:
@@ -166,6 +177,9 @@ services:
       - OPENAEV_MAIL_IMAP_SSL_TRUST=*
       - OPENAEV_MAIL_IMAP_STARTTLS_ENABLE=${IMAP_STARTTLS_ENABLE}
       - OPENAEV_WITH-PROXY=${OPENAEV_WITH_PROXY}
+      # XTM One
+      - OPENAEV_XTM_ONE_URL=http://xtm-one:4000
+      - OPENAEV_XTM_ONE_TOKEN=${PLATFORM_REGISTRATION_TOKEN}
     ports:
       - "${OPENAEV_PORT}:8080"
     depends_on:
@@ -266,9 +280,95 @@ services:
       openaev:
         condition: service_healthy
     restart: always
+
+  ###########################
+  # XTM ONE                 #
+  ###########################
+
+  pgsql-xtm-one:
+    # Dedicated pgvector-enabled instance for XTM One (kept separate from
+    # the OpenAEV pg cluster to isolate data and migrations).
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: ${XTM_ONE_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${XTM_ONE_POSTGRES_PASSWORD}
+      POSTGRES_DB: xtm_one
+    volumes:
+      - pgsqlxtmonedata:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${XTM_ONE_POSTGRES_USER}", "-d", "xtm_one" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  xtm-one:
+    image: filigran/xtm-one:${XTM_ONE_VERSION:-rolling}
+    environment:
+      - PLATFORM_MODE=xtm_one
+      - PLATFORM_REGISTRATION_TOKEN=${PLATFORM_REGISTRATION_TOKEN}
+      - BASE_URL=${XTM_ONE_EXTERNAL_SCHEME}://${XTM_ONE_HOST}:${XTM_ONE_PORT}
+      - FRONTEND_URL=${XTM_ONE_EXTERNAL_SCHEME}://${XTM_ONE_HOST}:${XTM_ONE_PORT}
+      - ADMIN_EMAIL=${XTM_ONE_ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${XTM_ONE_ADMIN_PASSWORD}
+      - SECRET_KEY=${XTM_ONE_SECRET_KEY}
+      - DATABASE_URL=postgresql+asyncpg://${XTM_ONE_POSTGRES_USER}:${XTM_ONE_POSTGRES_PASSWORD}@pgsql-xtm-one:5432/xtm_one
+      - REDIS_URL=redis://redis:6379
+      - S3_ENDPOINT=minio:9000
+      - S3_ACCESS_KEY=${MINIO_ROOT_USER}
+      - S3_SECRET_KEY=${MINIO_ROOT_PASSWORD}
+      - S3_BUCKET=${XTM_ONE_S3_BUCKET:-xtm-one-files}
+      - S3_USE_SSL=false
+      - LOG_LEVEL=${XTM_ONE_LOG_LEVEL:-info}
+      - LOG_FORMAT=${XTM_ONE_LOG_FORMAT:-json}
+      - ENTERPRISE_LICENSE=${XTM_ONE_ENTERPRISE_LICENSE:-}
+      # Internal API endpoint for the OpenAEV integration (Docker hostname)
+      - OPENAEV_API_URL=http://openaev:8080
+    ports:
+      - "${XTM_ONE_PORT}:4000"
+    depends_on:
+      pgsql-xtm-one:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:4000/api/health')\""]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  xtm-one-worker:
+    image: filigran/xtm-one-worker:${XTM_ONE_VERSION:-rolling}
+    environment:
+      - PLATFORM_MODE=xtm_one
+      - PLATFORM_REGISTRATION_TOKEN=${PLATFORM_REGISTRATION_TOKEN}
+      - ADMIN_EMAIL=${XTM_ONE_ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${XTM_ONE_ADMIN_PASSWORD}
+      - SECRET_KEY=${XTM_ONE_SECRET_KEY}
+      - DATABASE_URL=postgresql+asyncpg://${XTM_ONE_POSTGRES_USER}:${XTM_ONE_POSTGRES_PASSWORD}@pgsql-xtm-one:5432/xtm_one
+      - REDIS_URL=redis://redis:6379
+      - S3_ENDPOINT=minio:9000
+      - S3_ACCESS_KEY=${MINIO_ROOT_USER}
+      - S3_SECRET_KEY=${MINIO_ROOT_PASSWORD}
+      - S3_BUCKET=${XTM_ONE_S3_BUCKET:-xtm-one-files}
+      - S3_USE_SSL=false
+      - LOG_LEVEL=${XTM_ONE_LOG_LEVEL:-info}
+      - LOG_FORMAT=${XTM_ONE_LOG_FORMAT:-json}
+      - ENTERPRISE_LICENSE=${XTM_ONE_ENTERPRISE_LICENSE:-}
+    depends_on:
+      xtm-one:
+        condition: service_healthy
+    restart: always
+
 volumes:
   pgsqldata:
   s3data:
   amqpdata:
   esdata:
   rsakeys:
+  redisdata:
+  pgsqlxtmonedata:
