@@ -58,6 +58,22 @@ OpenAEV allows you to customize your stack by selecting specific collectors and 
 - Additional Collectors: Explore a variety of collectors available [here](https://filigran.notion.site/OpenAEV-Ecosystem-30d8eb73d7d04611843e758ddef8941b#fb5f20e515df428994bed1438131cbd1).
 - Additional Injectors: Discover injectors to enhance your simulations [here](https://filigran.notion.site/OpenAEV-Ecosystem-30d8eb73d7d04611843e758ddef8941b#90cfcc2895d441d68b54eda9b57d5d31).
 
+---
+
+## 🤖 XTM One
+
+This stack bundles [XTM One](https://filigran.io), Filigran's AI-powered assistant, alongside OpenAEV. The following services are started by default:
+
+| Service | Description |
+|---------|-------------|
+| `xtm-one` | XTM One platform (web UI + API, exposed on `XTM_ONE_PORT`) |
+| `xtm-one-worker` | XTM One background worker |
+| `pgsql-xtm-one` | Dedicated PostgreSQL + `pgvector` instance for XTM One |
+
+XTM One reuses the shared `redis` and `minio` services and connects to OpenAEV internally via `OPENAEV_API_URL`. OpenAEV registers itself with XTM One using `PLATFORM_REGISTRATION_TOKEN` — this shared secret **must be identical** across every platform connected to the same XTM One instance.
+
+All XTM One configuration (admin credentials, dedicated Postgres credentials, S3 bucket, license, log settings) lives in the `XTM ONE` section of [.env.sample](.env.sample). Once the stack is healthy, XTM One is available on `http://localhost:${XTM_ONE_PORT}` (default `8090`).
+
 ## About
 
 OpenAEV is a product designed and developed by the company [Filigran](https://filigran.io).
