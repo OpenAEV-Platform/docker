@@ -19,7 +19,7 @@ services:
     restart: always
   redis:
     # Used by XTM One.
-    image: redis:8.6.3
+    image: redis:8.8.0
     restart: always
     volumes:
       - redisdata:/data
