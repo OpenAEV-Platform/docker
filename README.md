@@ -74,6 +74,17 @@ XTM One reuses the shared `redis` and `minio` services and connects to OpenAEV i
 
 All XTM One configuration (admin credentials, dedicated Postgres credentials, S3 bucket, license, log settings) lives in the `XTM ONE` section of [.env.sample](.env.sample). Once the stack is healthy, XTM One is available on `http://localhost:${XTM_ONE_PORT}` (default `8090`).
 
+### Public and internal URLs
+
+Each product has two URLs in this stack:
+
+- the **public URL** you open in your browser, built from `OPENAEV_HOST` / `OPENAEV_PORT` and `XTM_ONE_HOST` / `XTM_ONE_PORT`. It is also the identity each product signs its requests to the other with, so it is set on both XTM One containers (`BASE_URL`) and on OpenAEV (`OPENAEV_BASE-URL`);
+- the **internal URL** the containers reach each other on: `http://openaev:8080` (`OPENAEV_API_URL` on XTM One) and `http://xtm-one:4000` (`OPENAEV_XTM_ONE_URL` on OpenAEV).
+
+The public host name does not need to resolve inside the containers: XTM One fetches OpenAEV's signing keys and sends the autonomous run callbacks on the internal URL, and OpenAEV reads XTM One's public identity from `http://xtm-one:4000/xtm/auth/metadata`. This needs XTM One and OpenAEV versions that include [XTM-One-Platform/xtm-one#4880](https://github.com/XTM-One-Platform/xtm-one/issues/4880) and [OpenAEV-Platform/openaev#8142](https://github.com/OpenAEV-Platform/openaev/issues/8142).
+
+If OpenAEV registers with XTM One but every assistant action on OpenAEV data fails with `401`, the XTM One logs (`XTM JWT rejected`) and the OpenAEV logs (`Untrusted JWKS issuer`) name the URL that did not match.
+
 ## About
 
 OpenAEV is a product designed and developed by the company [Filigran](https://filigran.io).

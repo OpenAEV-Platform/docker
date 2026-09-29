@@ -322,6 +322,10 @@ services:
       - ENTERPRISE_LICENSE=${XTM_ONE_ENTERPRISE_LICENSE:-}
       # Internal API endpoint for the OpenAEV integration (Docker hostname)
       - OPENAEV_API_URL=http://openaev:8080
+      # The URL OpenAEV reaches XTM One on (OPENAEV_XTM_ONE_URL): accepted as the
+      # audience of the tokens OpenAEV sends, for OpenAEV versions that address
+      # them to that URL instead of the BASE_URL above
+      - XTM_AUTH_ACCEPTED_AUDIENCES=http://xtm-one:4000
     ports:
       - "${XTM_ONE_PORT}:4000"
     depends_on:
@@ -344,6 +348,10 @@ services:
     environment:
       - PLATFORM_MODE=xtm_one
       - PLATFORM_REGISTRATION_TOKEN=${PLATFORM_REGISTRATION_TOKEN}
+      # Same public URL as the xtm-one service: the worker signs the tokens of
+      # background work (assignments, autonomous runs) sent to OpenAEV
+      - BASE_URL=${XTM_ONE_EXTERNAL_SCHEME}://${XTM_ONE_HOST}:${XTM_ONE_PORT}
+      - FRONTEND_URL=${XTM_ONE_EXTERNAL_SCHEME}://${XTM_ONE_HOST}:${XTM_ONE_PORT}
       - ADMIN_EMAIL=${XTM_ONE_ADMIN_EMAIL}
       - ADMIN_PASSWORD=${XTM_ONE_ADMIN_PASSWORD}
       - SECRET_KEY=${XTM_ONE_SECRET_KEY}
