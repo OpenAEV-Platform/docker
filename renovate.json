@@ -9,7 +9,7 @@
       "matchDatasources": [
         "docker"
       ],
-      "commitMessagePrefix": "[docker]"
+      "commitMessagePrefix": "chore(docker):"
     }
   ]
 }
