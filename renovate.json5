@@ -57,12 +57,12 @@
             ],
             rebaseWhen: 'auto',
         },
+        {
+            description: 'docker.elastic.co publishes no release timestamp, so minimumReleaseAge would hold every update as pending',
+            matchPackageNames: [
+                'docker.elastic.co/**',
+            ],
+            minimumReleaseAge: null,
+        },
     ],
-    lockFileMaintenance: {
-        schedule: [
-            '* * * * 0',
-        ],
-        rebaseWhen: 'auto',
-        enabled: true,
-    },
 }
