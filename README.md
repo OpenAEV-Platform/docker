@@ -12,6 +12,23 @@ the [OpenAEV documentation space](https://docs.openaev.io/latest/deployment/inst
 
 ---
 
+## 🗄️ Object storage
+
+The `minio` service runs [RustFS](https://rustfs.com), an open source (Apache 2.0) S3-compatible object storage. The
+service name, the `s3data` volume and the `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` variables keep their former names,
+so the OpenAEV, collectors and XTM One settings do not change.
+
+Upgrading a stack that ran MinIO or Silo: RustFS does not start on an `s3data` volume written by MinIO or Silo
+(`Permission denied`: that volume belongs to root, RustFS runs as uid 10001). Back up the volume and follow the migration
+guide listed in the [breaking changes of the OpenAEV documentation](https://docs.openaev.io/latest/deployment/breaking-changes/)
+before starting the stack with the new compose file. Its first steps run with the previous compose file: if you update
+this clone with `git pull`, run them before the pull.
+
+Development stack (`docker-compose.dev.yml`): `openaev-dev-minio` now keeps its data in the named volume `rustfsdata`,
+which starts empty. Files stored by the previous Silo container stay in its anonymous volume and are not carried over.
+
+---
+
 ## 👥 Community
 
 ### 🛠️ Status & Bugs
